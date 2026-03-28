@@ -119,7 +119,7 @@ class VacancyController extends Controller
         // Si solo se manda cambiar el estado (desde Show.vue)
         if ($request->has('status') && count($request->all()) <= 2) {
             $validated = $request->validate([
-                'status' => 'required|string|in:nueva,en_proceso,en_busqueda,en_validacion,cerrada,cancelada',
+                'status' => 'required|string|in:cancelada', // Las empresas solo pueden cancelar
             ]);
             $vacancy->update(['status' => $validated['status']]);
             return back()->with('success', 'Estado de vacante actualizado.');

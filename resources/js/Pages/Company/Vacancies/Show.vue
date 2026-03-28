@@ -35,11 +35,8 @@ const changeStatus = (newStatus) => {
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Estado de la Vacante</h3>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Actual: <span class="font-bold uppercase">{{ vacancy.status }}</span></p>
                     </div>
-                    <div class="flex space-x-2">
-                        <button @click="changeStatus('en_busqueda')" class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded hover:bg-indigo-200" :class="{'ring-2 ring-indigo-500': vacancy.status === 'en_busqueda'}">En Búsqueda</button>
-                        <button @click="changeStatus('en_proceso')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200" :class="{'ring-2 ring-yellow-500': vacancy.status === 'en_proceso'}">En Proceso</button>
-                        <button @click="changeStatus('cerrada')" class="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200" :class="{'ring-2 ring-red-500': vacancy.status === 'cerrada'}">Cerrada</button>
-                        <button @click="changeStatus('cancelada')" class="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200" :class="{'ring-2 ring-gray-500': vacancy.status === 'cancelada'}">Cancelada</button>
+                    <div v-if="vacancy.status !== 'cancelada' && vacancy.status !== 'cerrada'" class="flex space-x-2">
+                        <button @click="if (confirm('¿Estás seguro de que deseas cancelar esta vacante?')) changeStatus('cancelada')" class="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 font-medium">Cancelar Vacante</button>
                     </div>
                 </div>
 
