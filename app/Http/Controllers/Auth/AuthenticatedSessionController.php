@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Enums\UserRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,10 +34,26 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if ($request->user()->role->value === 'empresa' || $request->user()->role === \App\Enums\UserRole::EMPRESA) {
-            return redirect(route('company.dashboard', absolute: false));
+        $user = $request->user();
+        $role = $user->role; // Cast to UserRole enum (or null)
+
+        // Bloqueo de seguridad: las empresas no pueden ingresar por el portal de empleados
+        if ($role === UserRole::EMPRESA) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => 'Este portal es exclusivo para empleados de Contratamos. Las empresas deben ingresar a través del Portal de Clientes.',
+            ]);
         }
 
+        // Coordinador, Analista, Asistente → Dashboard de Selección
+        if (in_array($role, [UserRole::COORDINADOR, UserRole::ANALISTA, UserRole::ASISTENTE])) {
+            return redirect()->intended(route('selection.dashboard', absolute: false));
+        }
+
+        // Admin y demás → Dashboard administrativo
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

@@ -28,7 +28,7 @@ defineProps({
                 <nav v-if="canLogin" class="flex items-center space-x-6">
                     <Link
                         v-if="$page.props.auth.user"
-                        :href="route('dashboard')"
+                        :href="$page.props.auth.user.role === 'empresa' ? route('company.dashboard') : route('dashboard')"
                         class="text-sm font-semibold hover:text-brand-primary transition duration-300"
                     >
                         Ir al Panel
@@ -43,7 +43,7 @@ defineProps({
                         </Link>
 
                         <Link
-                            :href="route('login')"
+                            :href="route('company.login')"
                             class="text-sm font-medium bg-brand-primary text-brand-dark px-5 py-2 rounded-full hover:bg-white transition duration-300 shadow-md"
                         >
                             Portal Cliente
@@ -72,7 +72,7 @@ defineProps({
                     </Link>
                     <Link 
                         v-if="!$page.props.auth.user"
-                        :href="route('login')" 
+                        :href="route('company.login')" 
                         class="px-8 py-4 bg-brand-primary text-brand-dark text-center text-lg font-bold rounded-full hover:bg-white border border-brand-primary transition duration-300 shadow-xl"
                     >
                         Portal Cliente

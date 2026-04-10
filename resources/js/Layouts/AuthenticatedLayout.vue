@@ -16,17 +16,17 @@ const user = computed(() => page.props.auth.user);
     <div>
         <div class="min-h-screen bg-[#F4F7F6] dark:bg-gray-900">
             <nav
-                class="border-b border-brand-dark/10 bg-brand-dark dark:border-gray-700 dark:bg-gray-800"
+                class="bg-brand-dark border-b border-white/5 shadow-2xl sticky top-0 z-[100]"
             >
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center justify-center bg-white rounded-lg p-1 mr-4">
+                    <div class="flex h-20 justify-between items-center">
+                        <div class="flex items-center">
+                            <!-- Logo Wrapper -->
+                            <div class="flex shrink-0 items-center justify-center bg-white p-2 rounded-2xl shadow-inner shadow-black/5 mr-6 transition-transform hover:scale-105">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto text-brand-primary"
+                                        class="block h-10 w-auto text-brand-primary"
                                     />
                                 </Link>
                             </div>

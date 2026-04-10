@@ -36,7 +36,7 @@ const changeStatus = (newStatus) => {
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Actual: <span class="font-bold uppercase">{{ vacancy.status }}</span></p>
                     </div>
                     <div v-if="vacancy.status !== 'cancelada' && vacancy.status !== 'cerrada'" class="flex space-x-2">
-                        <button @click="if (confirm('¿Estás seguro de que deseas cancelar esta vacante?')) changeStatus('cancelada')" class="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 font-medium">Cancelar Vacante</button>
+                        <button @click="confirm('¿Estás seguro de que deseas cancelar esta vacante?') && changeStatus('cancelada')" class="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 font-medium">Cancelar Vacante</button>
                     </div>
                 </div>
 

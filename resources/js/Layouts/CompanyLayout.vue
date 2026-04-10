@@ -14,7 +14,7 @@ defineProps({
 const showingNavigationDropdown = ref(false);
 
 const logout = () => {
-    router.post(route('logout'));
+    router.post(route('company.logout'));
 };
 </script>
 
@@ -22,18 +22,18 @@ const logout = () => {
     <div>
         <Head :title="title" />
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="shrink-0 flex items-center">
-                                <Link :href="route('company.dashboard')">
-                                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                </Link>
-                            </div>
+    <div class="min-h-screen bg-[#F4F7F6] dark:bg-gray-950">
+        <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 dark:bg-brand-dark/90 dark:border-white/5 sticky top-0 z-50">
+            <!-- Primary Navigation Menu -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20 items-center">
+                    <div class="flex items-center">
+                        <!-- Logo -->
+                        <div class="shrink-0 flex items-center bg-brand-dark dark:bg-white p-2 rounded-2xl shadow-xl shadow-brand-dark/10 mr-6">
+                            <Link :href="route('company.dashboard')">
+                                <ApplicationLogo class="block h-9 w-auto text-brand-primary" />
+                            </Link>
+                        </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -79,7 +79,7 @@ const logout = () => {
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                         <!-- Authentication -->
-                                        <DropdownLink :href="route('logout')" method="post" as="button">
+                                        <DropdownLink :href="route('company.logout')" method="post" as="button">
                                             Cerrar Sesión
                                         </DropdownLink>
                                     </template>
@@ -150,7 +150,7 @@ const logout = () => {
                             </ResponsiveNavLink>
 
                             <!-- Authentication -->
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                            <ResponsiveNavLink :href="route('company.logout')" method="post" as="button">
                                 Cerrar Sesión
                             </ResponsiveNavLink>
                         </div>

@@ -5,17 +5,19 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div
-        class="flex min-h-screen flex-col items-center bg-gray-50 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900"
+        class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-[#f8fafc] via-white to-brand-primary/10 p-4 dark:from-gray-950 dark:via-brand-dark dark:to-gray-950"
     >
-        <div>
-            <Link href="/" class="flex flex-col items-center gap-2">
-                <ApplicationLogo class="h-16 text-brand-primary drop-shadow-md" />
-                <span class="text-2xl font-extrabold text-brand-dark tracking-tight">CONTRATAMOS</span>
+        <div class="mb-8">
+            <Link href="/" class="flex flex-col items-center gap-3">
+                <div class="p-4 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
+                    <ApplicationLogo class="h-12 w-auto text-brand-primary" />
+                </div>
+                <span class="text-3xl font-extrabold text-brand-dark dark:text-white tracking-tight">CONTRATAMOS</span>
             </Link>
         </div>
 
         <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-8 shadow-xl sm:max-w-md sm:rounded-2xl border border-gray-100 dark:bg-gray-800 dark:border-gray-700"
+            class="w-full overflow-hidden bg-white/70 backdrop-blur-md px-8 py-10 shadow-2xl shadow-brand-dark/5 sm:max-w-md sm:rounded-3xl border border-white dark:bg-gray-800/80 dark:border-gray-700"
         >
             <slot />
         </div>

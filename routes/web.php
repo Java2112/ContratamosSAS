@@ -51,23 +51,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Rutas del Dominio Empresas (Clientes)
-    Route::prefix('company')->name('company.')->group(function () {
-        
-        // Rutas de primer ingreso
-        Route::get('/setup-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'create'])->name('first-login');
-        Route::post('/setup-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'store'])->name('first-login.store');
-
-        Route::get('/dashboard', [\App\Domains\Company\Controllers\DashboardController::class, 'index'])->name('dashboard');
-        Route::resource('vacancies', \App\Domains\Company\Controllers\VacancyController::class);
-        
-        // Profile
-        Route::get('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    });
 });
 
 require __DIR__.'/auth.php';
+
+// ── Portal Empresas ──────────────────────────────────────────────────────────
+Route::prefix('company')->name('company.')->group(function () {
+    
+    // Redirección base del prefijo
+    Route::get('/', function () {
+        return redirect()->route('company.dashboard');
+    });
+
+    // Rutas públicas (sin autenticación)
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [\App\Domains\Company\Controllers\CompanySessionController::class, 'create'])->name('login');
+        Route::post('/login', [\App\Domains\Company\Controllers\CompanySessionController::class, 'store'])->name('login.store');
+
+        Route::get('/setup-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'create'])->name('first-login');
+        Route::post('/setup-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'store'])->name('first-login.store');
+    });
+
+    // Rutas protegidas (solo empresas autenticadas)
+    Route::middleware('company.auth')->group(function () {
+        Route::get('/dashboard', [\App\Domains\Company\Controllers\DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('vacancies', \App\Domains\Company\Controllers\VacancyController::class);
+
+        Route::get('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
+        Route::post('/logout', [\App\Domains\Company\Controllers\CompanySessionController::class, 'destroy'])->name('logout');
+    });
+});
 
 // Public Magic Link Routes (No Auth Required)
 Route::get('/client/review/{token}', [\App\Domains\Selection\Controllers\MagicLinkController::class, 'show'])->name('magic-link.show');
