@@ -20,19 +20,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('dashboard');
 
     // Rutas del Dominio Admin
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     });
 
     // Rutas del Dominio Comercial
-    Route::prefix('commercial')->name('commercial.')->group(function () {
+    Route::prefix('commercial')->middleware('role:admin,coordinador')->name('commercial.')->group(function () {
         Route::resource('clients', \App\Domains\Commercial\Controllers\ClientController::class);
         Route::resource('contracts', \App\Domains\Commercial\Controllers\ContractController::class);
         Route::get('contracts/{contract}/pdf', [\App\Domains\Commercial\Controllers\ContractController::class, 'downloadPdf'])->name('contracts.pdf');
     });
 
     // Rutas del Dominio Selección
-    Route::prefix('selection')->name('selection.')->group(function () {
+    Route::prefix('selection')->middleware('role:admin,coordinador,asistente,analista')->name('selection.')->group(function () {
         Route::get('/dashboard', [\App\Domains\Selection\Controllers\DashboardController::class, 'index'])->name('dashboard');
         
         Route::resource('vacancies', \App\Domains\Selection\Controllers\VacancyController::class);
@@ -41,10 +41,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('vacancies/{vacancy}/magic-link', [\App\Domains\Selection\Controllers\VacancyController::class, 'generateMagicLink'])->name('vacancies.magic-link');
         
         // Candidatos
+        Route::get('candidates/{candidate}', [\App\Domains\Selection\Controllers\CandidateController::class, 'show'])->name('candidates.show');
         Route::post('vacancies/{vacancy}/candidates', [\App\Domains\Selection\Controllers\CandidateController::class, 'storeForVacancy'])->name('vacancies.candidates.store');
 
         // Postulaciones
         Route::post('applications/{application}/status', [\App\Domains\Selection\Controllers\ApplicationController::class, 'updateStatus'])->name('applications.status');
+    });
+
+    // Rutas del Dominio Contratación
+    Route::prefix('contracting')->middleware('role:admin,jefe-contratacion')->name('contracting.')->group(function () {
+        Route::get('/dashboard', [\App\Domains\Contracting\Controllers\ContractingDashboardController::class, 'index'])->name('dashboard');
+        
+        Route::get('/process', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'index'])->name('process.index');
+        Route::get('/process/{process}', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'show'])->name('process.show');
+        Route::post('/document/{document}/validate', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'validateDocument'])->name('document.validate');
+        Route::post('/process/{process}/medical', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'recordMedicalExam'])->name('process.medical');
+        Route::post('/process/{process}/contract/upload', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'uploadContract'])->name('process.contract.upload');
+        Route::post('/process/{process}/contract/sign', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'signContract'])->name('process.contract.sign');
+        Route::post('/process/{process}/affiliation', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'saveAffiliation'])->name('process.affiliation');
+        Route::post('/process/{process}/send-to-payroll', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'sendToPayroll'])->name('process.send-to-payroll');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -76,6 +91,11 @@ Route::prefix('company')->name('company.')->group(function () {
     Route::middleware('company.auth')->group(function () {
         Route::get('/dashboard', [\App\Domains\Company\Controllers\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('vacancies', \App\Domains\Company\Controllers\VacancyController::class);
+
+        // Candidate Reviews
+        Route::get('/reviews/{application}', [\App\Domains\Company\Controllers\CompanyReviewController::class, 'show'])->name('reviews.show');
+        Route::post('/reviews/{application}/approve', [\App\Domains\Company\Controllers\CompanyReviewController::class, 'approve'])->name('reviews.approve');
+        Route::post('/reviews/{application}/reject', [\App\Domains\Company\Controllers\CompanyReviewController::class, 'reject'])->name('reviews.reject');
 
         Route::get('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [\App\Domains\Company\Controllers\ProfileController::class, 'update'])->name('profile.update');

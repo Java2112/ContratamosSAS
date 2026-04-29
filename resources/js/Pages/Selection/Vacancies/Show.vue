@@ -44,7 +44,7 @@ const availableStatuses = [
     { value: 'antecedentes', label: 'Revisión Antecedentes' },
     { value: 'entrevista', label: 'En Entrevista' },
     { value: 'pruebas', label: 'En Pruebas' },
-    { value: 'enviado_cliente', label: 'Enviado al Cliente' },
+    { value: 'en_revision_empresa', label: 'En Revisión Empresa' },
     { value: 'rechazado_interno', label: 'Descartado Internamente' },
 ];
 
@@ -82,12 +82,14 @@ const getStatusColor = (status) => {
         'antecedentes': 'bg-orange-100 text-orange-800',
         'entrevista': 'bg-blue-100 text-blue-800',
         'pruebas': 'bg-indigo-100 text-indigo-800',
-        'enviado_cliente': 'bg-yellow-100 text-yellow-800',
-        'aprobado_cliente': 'bg-green-100 text-green-800',
-        'rechazado_cliente': 'bg-red-100 text-red-800',
+        'en_revision_empresa': 'bg-yellow-100 text-yellow-800',
+        'aprobado_empresa': 'bg-green-100 text-green-800',
+        'rechazado_empresa': 'bg-red-100 text-red-800',
         'rechazado_interno': 'bg-red-100 text-red-800',
         'contratado': 'bg-emerald-100 text-emerald-800',
         'entrevista_cliente': 'bg-purple-100 text-purple-800',
+        'pendiente_contratacion': 'bg-cyan-100 text-cyan-800',
+        'en_contratacion': 'bg-blue-100 text-blue-800',
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
 };
@@ -270,15 +272,16 @@ const copyMagicLink = () => {
                                         {{ app.stages?.length || 0 }} movimientos
                                     </td>
                                     <td class="px-6 py-4 text-center space-x-2">
-                                        <button v-if="userRole === 'coordinador' || userRole === 'asistente' || userRole === 'analista'" @click="openStatusModal(app)" class="text-brand-primary hover:text-brand-dark font-bold underline text-xs uppercase tracking-wide">
+                                        <Link :href="route('selection.candidates.show', app.candidate_id)" class="text-brand-dark hover:text-brand-primary font-bold underline text-xs uppercase tracking-wide">
+                                            Ver información
+                                        </Link>
+                                        <button v-if="userRole === 'coordinador' || userRole === 'asistente' || userRole === 'analista'" @click="openStatusModal(app)" class="text-brand-primary hover:text-brand-dark font-bold underline text-xs uppercase tracking-wide ml-2">
                                             Avanzar Etapa
                                         </button>
                                         <a v-if="app.candidate?.cv_path" :href="app.candidate.cv_path" target="_blank" class="text-blue-500 hover:text-blue-700 ml-2 font-bold underline text-xs uppercase tracking-wide">
                                             Ver CV
                                         </a>
-                                        <a v-if="app.report_url" :href="app.report_url" target="_blank" class="text-green-600 hover:text-green-800 ml-2 font-bold underline text-xs uppercase tracking-wide">
-                                            Info. Perfil
-                                        </a>
+
                                     </td>
                                 </tr>
                                 <tr v-if="vacancy.applications.length === 0">

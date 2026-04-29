@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Storage;
 
 class CandidateController extends Controller
 {
+    public function show(Candidate $candidate)
+    {
+        $candidate->load(['applications.vacancy.client']);
+        
+        return Inertia::render('Selection/Candidates/Show', [
+            'candidate' => $candidate
+        ]);
+    }
+
     public function storeForVacancy(Request $request, Vacancy $vacancy)
     {
         $request->validate([

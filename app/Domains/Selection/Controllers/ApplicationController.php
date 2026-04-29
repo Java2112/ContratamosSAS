@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Domains\Selection\Models\Candidate;
 use App\Domains\Selection\Models\Application;
 use App\Domains\Selection\Models\ApplicationStage;
+use App\Domains\Selection\Events\ApplicationStatusUpdated;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -25,6 +26,8 @@ class ApplicationController extends Controller
         $application->update([
             'status' => $request->status,
         ]);
+
+        event(new ApplicationStatusUpdated($application, $oldStatus, $request->status));
 
         ApplicationStage::create([
             'application_id' => $application->id,

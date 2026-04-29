@@ -25,11 +25,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Crear Roles
-        $adminRole = Role::create(['name' => 'super-admin']);
-        $coordinatorRole = Role::create(['name' => 'selection-coordinator']);
-        $analystRole = Role::create(['name' => 'recruiter']); // Analista Selección
-        $assistantRole = Role::create(['name' => 'selection-assistant']); // Asistente Selección
-        $clientRole = Role::create(['name' => 'client']);
+        $adminRole = Role::create(['name' => UserRole::ADMIN->value]);
+        $coordinatorRole = Role::create(['name' => UserRole::COORDINADOR->value]);
+        $analystRole = Role::create(['name' => UserRole::ANALISTA->value]);
+        $assistantRole = Role::create(['name' => UserRole::ASISTENTE->value]);
+        $clientRole = Role::create(['name' => UserRole::EMPRESA->value]);
+        $contractingRole = Role::create(['name' => UserRole::JEFE_CONTRATACION->value]);
         Role::create(['name' => 'commercial-analyst']);
         
         // 3. Crear Usuarios y asignarles el Tenant y Roles correspondientes

@@ -47,21 +47,32 @@ const changeStatus = (newStatus) => {
                         <table class="w-full text-sm text-left">
                             <thead class="bg-gray-50 dark:bg-gray-900">
                                 <tr>
-                                    <th class="px-4 py-2">Nombre Oculto (ID)</th>
-                                    <th class="px-4 py-2 text-center">Estado de Postulación</th>
+                                    <th class="px-4 py-2">Candidato</th>
+                                    <th class="px-4 py-2 text-center">Estado</th>
+                                    <th class="px-4 py-2 text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
-                                <tr v-for="app in vacancy.applications" :key="app.id">
-                                    <td class="px-4 py-3 font-medium text-gray-600">
-                                        Candidato #{{ String(app.candidate_id).padStart(4, '0') }}
+                                <tr v-for="app in vacancy.applications" :key="app.id" class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">
+                                        {{ app.candidate.first_name }} {{ app.candidate.last_name }}
                                     </td>
                                     <td class="px-4 py-3 text-center">
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase">{{ app.status.replace('_', ' ') }}</span>
+                                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" 
+                                              :class="app.status === 'aprobado_empresa' ? 'bg-green-100 text-green-800' : 
+                                                      app.status === 'rechazado_empresa' ? 'bg-red-100 text-red-800' : 
+                                                      'bg-blue-100 text-blue-800'">
+                                            {{ app.status.replace('_', ' ') }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <Link :href="route('company.reviews.show', app.id)" class="text-brand-primary hover:underline font-bold text-sm">
+                                            Ver Perfil →
+                                        </Link>
                                     </td>
                                 </tr>
                                 <tr v-if="!vacancy.applications || vacancy.applications.length === 0">
-                                    <td colspan="2" class="px-4 py-8 text-center text-gray-500">
+                                    <td colspan="3" class="px-4 py-8 text-center text-gray-500">
                                         Aún no hay candidatos procesados para esta vacante.
                                     </td>
                                 </tr>

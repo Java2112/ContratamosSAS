@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'company.auth' => \App\Http\Middleware\EnsureCompanyAuth::class,
+            'role' => \App\Http\Middleware\CheckRole::class,
         ]);
 
         $middleware->redirectGuestsTo(fn ($request) => $request->is('company/*') || $request->is('company') 

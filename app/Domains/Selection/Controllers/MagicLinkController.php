@@ -18,7 +18,7 @@ class MagicLinkController extends Controller
             ->firstOrFail();
 
         $vacancy = $magicLink->vacancy()->with(['client', 'applications' => function($q) {
-            $q->whereIn('status', ['enviado_cliente', 'aprobado_cliente', 'rechazado_cliente', 'entrevista_cliente'])
+            $q->whereIn('status', ['en_revision_empresa', 'aprobado_empresa', 'rechazado_empresa', 'entrevista_cliente'])
               ->with('candidate');
         }])->first();
 
@@ -39,20 +39,30 @@ class MagicLinkController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => 'required|in:aprobado_cliente,rechazado_cliente,entrevista_cliente',
+            'status' => 'required|in:aprobado_empresa,rechazado_empresa,entrevista_cliente',
             'feedback' => 'nullable|string'
         ]);
 
         $oldStatus = $application->status->value;
 
         // Ensure we only process if it was actually sent to client
-        if (!in_array($oldStatus, ['enviado_cliente', 'aprobado_cliente', 'rechazado_cliente', 'entrevista_cliente'])) {
+        if (!in_array($oldStatus, ['en_revision_empresa', 'aprobado_empresa', 'rechazado_empresa', 'entrevista_cliente'])) {
             return back()->with('error', 'El candidato no está en un estado válido para revisión.');
         }
 
         $application->update([
             'status' => $validated['status'],
         ]);
+
+        if ($validated['status'] === 'aprobado_empresa') {
+            \App\Domains\Contracting\Models\ContractingProcess::create([
+                'tenant_id' => $application->tenant_id,
+                'application_id' => $application->id,
+                'status' => \App\Enums\Contracting\ProcessStatus::PENDING_CONTRACTING,
+                'agreed_salary' => $application->vacancy->min_salary,
+                'cargo' => $application->vacancy->title,
+            ]);
+        }
 
         ApplicationStage::create([
             'application_id' => $application->id,

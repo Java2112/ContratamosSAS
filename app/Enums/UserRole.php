@@ -9,6 +9,7 @@ enum UserRole: string
     case ASISTENTE = 'asistente';
     case ANALISTA = 'analista';
     case EMPRESA = 'empresa';
+    case JEFE_CONTRATACION = 'jefe-contratacion';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum UserRole: string
             self::ASISTENTE => 'Asistente',
             self::ANALISTA => 'Analista / Operativo',
             self::EMPRESA => 'Empresa Cliente',
+            self::JEFE_CONTRATACION => 'Jefe de Contratación',
         };
     }
 

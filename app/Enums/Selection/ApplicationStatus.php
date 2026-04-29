@@ -8,12 +8,14 @@ enum ApplicationStatus: string
     case BACKGROUND_CHECK = 'antecedentes';
     case INTERVIEW = 'entrevista';
     case TESTS = 'pruebas';
-    case SENT_TO_CLIENT = 'enviado_cliente';
+    case SENT_TO_CLIENT = 'en_revision_empresa';
     case INTERVIEW_CLIENT = 'entrevista_cliente';
-    case APPROVED_BY_CLIENT = 'aprobado_cliente';
-    case REJECTED_BY_CLIENT = 'rechazado_cliente';
+    case APPROVED_BY_CLIENT = 'aprobado_empresa';
+    case REJECTED_BY_CLIENT = 'rechazado_empresa';
     case REJECTED_INTERNAL = 'rechazado_interno';
     case HIRED = 'contratado';
+    case PENDING_CONTRACTING = 'pendiente_contratacion';
+    case IN_CONTRACTING = 'en_contratacion';
 
     public function label(): string
     {
@@ -22,12 +24,14 @@ enum ApplicationStatus: string
             self::BACKGROUND_CHECK => 'Revisión Antecedentes',
             self::INTERVIEW => 'En Entrevista',
             self::TESTS => 'En Pruebas',
-            self::SENT_TO_CLIENT => 'Enviado al Cliente',
+            self::SENT_TO_CLIENT => 'En Revisión Empresa',
             self::INTERVIEW_CLIENT => 'Entrevista con Cliente',
-            self::APPROVED_BY_CLIENT => 'Aprobado por Cliente',
-            self::REJECTED_BY_CLIENT => 'Rechazado por Cliente',
+            self::APPROVED_BY_CLIENT => 'Aprobado por Empresa',
+            self::REJECTED_BY_CLIENT => 'Rechazado por Empresa',
             self::REJECTED_INTERNAL => 'Descartado Internamente',
-            self::HIRED => 'Seleccionado / Contratado',
+            self::HIRED => 'Contratado',
+            self::PENDING_CONTRACTING => 'Pendiente Contratación',
+            self::IN_CONTRACTING => 'En Contratación',
         };
     }
 
@@ -44,6 +48,8 @@ enum ApplicationStatus: string
             self::REJECTED_BY_CLIENT => 'red',
             self::REJECTED_INTERNAL => 'red',
             self::HIRED => 'emerald',
+            self::PENDING_CONTRACTING => 'cyan',
+            self::IN_CONTRACTING => 'blue',
         };
     }
 

@@ -37,9 +37,15 @@ const user = computed(() => page.props.auth.user);
                                     Dashboard
                                 </NavLink>
                                 
-                                <template v-if="user.system_area === 'seleccion'">
+                                <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.system_area === 'seleccion'">
                                     <NavLink :href="route('selection.dashboard')" :active="route().current('selection.dashboard')">
                                         Área Selección
+                                    </NavLink>
+                                </template>
+
+                                <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.system_area === 'contratacion' || user.role === 'jefe-contratacion'">
+                                    <NavLink :href="route('contracting.dashboard')" :active="route().current('contracting.*')">
+                                        Contratación
                                     </NavLink>
                                 </template>
 
@@ -167,9 +173,15 @@ const user = computed(() => page.props.auth.user);
                             Dashboard
                         </ResponsiveNavLink>
 
-                        <template v-if="user.system_area === 'seleccion'">
+                        <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.system_area === 'seleccion'">
                             <ResponsiveNavLink :href="route('selection.dashboard')" :active="route().current('selection.dashboard')">
                                 Área Selección
+                            </ResponsiveNavLink>
+                        </template>
+
+                        <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.system_area === 'contratacion' || user.role === 'jefe-contratacion'">
+                            <ResponsiveNavLink :href="route('contracting.dashboard')" :active="route().current('contracting.*')">
+                                Contratación
                             </ResponsiveNavLink>
                         </template>
 

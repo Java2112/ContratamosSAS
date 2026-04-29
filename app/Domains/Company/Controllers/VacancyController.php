@@ -88,7 +88,13 @@ class VacancyController extends Controller
             abort(403);
         }
 
-        $vacancy->load(['applications.candidate', 'applications.stages']);
+        $vacancy->load(['applications' => function($q) {
+            $q->whereIn('status', [
+                \App\Enums\Selection\ApplicationStatus::SENT_TO_CLIENT->value,
+                \App\Enums\Selection\ApplicationStatus::APPROVED_BY_CLIENT->value,
+                \App\Enums\Selection\ApplicationStatus::REJECTED_BY_CLIENT->value,
+            ])->with(['candidate', 'stages']);
+        }]);
 
         return Inertia::render('Company/Vacancies/Show', [
             'vacancy' => $vacancy

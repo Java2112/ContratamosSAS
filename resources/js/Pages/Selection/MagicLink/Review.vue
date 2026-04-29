@@ -66,8 +66,8 @@ const submitReview = () => {
                         <div class="flex-1">
                             <h4 class="text-xl font-extrabold text-gray-900 flex items-center gap-3">
                                 {{ app.candidate.first_name }} {{ app.candidate.last_name }}
-                                <span v-if="app.status === 'aprobado_cliente'" class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full uppercase tracking-widest border border-green-200">Aprobado</span>
-                                <span v-else-if="app.status === 'rechazado_cliente'" class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full uppercase tracking-widest border border-red-200">Rechazado</span>
+                                <span v-if="app.status === 'aprobado_empresa'" class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full uppercase tracking-widest border border-green-200">Aprobado</span>
+                                <span v-else-if="app.status === 'rechazado_empresa'" class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full uppercase tracking-widest border border-red-200">Rechazado</span>
                                 <span v-else-if="app.status === 'entrevista_cliente'" class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full uppercase tracking-widest border border-purple-200">Para Entrevista</span>
                                 <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full uppercase tracking-widest border border-yellow-200">Pendiente Revisión</span>
                             </h4>
@@ -85,14 +85,14 @@ const submitReview = () => {
                             </a>
                             
                             <!-- Act mode if not decided -->
-                            <template v-if="app.status === 'enviado_cliente'">
+                            <template v-if="app.status === 'en_revision_empresa'">
                                 <button @click="openReview(app, 'entrevista_cliente')" class="px-4 py-2 bg-purple-600 text-white hover:bg-purple-700 font-bold rounded-lg text-sm text-center shadow-lg transition flex-1">
                                     Citar a Entrevista
                                 </button>
-                                <button @click="openReview(app, 'aprobado_cliente')" class="px-4 py-2 bg-green-500 text-white hover:bg-green-600 font-bold rounded-lg text-sm text-center shadow-lg transition flex-1">
+                                <button @click="openReview(app, 'aprobado_empresa')" class="px-4 py-2 bg-green-500 text-white hover:bg-green-600 font-bold rounded-lg text-sm text-center shadow-lg transition flex-1">
                                     Aprobar
                                 </button>
-                                <button @click="openReview(app, 'rechazado_cliente')" class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 font-bold rounded-lg text-sm text-center shadow-lg transition flex-1">
+                                <button @click="openReview(app, 'rechazado_empresa')" class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 font-bold rounded-lg text-sm text-center shadow-lg transition flex-1">
                                     Descartar
                                 </button>
                             </template>
@@ -125,7 +125,7 @@ const submitReview = () => {
                 <div class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                     <div class="text-center mt-3">
                         <h3 class="text-2xl font-extrabold text-brand-dark tracking-tight mb-2">
-                            {{ reviewForm.status === 'aprobado_cliente' ? 'Aprobar Candidato' : reviewForm.status === 'entrevista_cliente' ? 'Agendar Entrevista' : 'Descartar Candidato' }}
+                            {{ reviewForm.status === 'aprobado_empresa' ? 'Aprobar Candidato' : reviewForm.status === 'entrevista_cliente' ? 'Agendar Entrevista' : 'Descartar Candidato' }}
                         </h3>
                         <p class="text-gray-500 text-sm">
                             Confirma tu decisión para el perfil de <strong>{{ selectedApp?.candidate?.first_name }}</strong>.
