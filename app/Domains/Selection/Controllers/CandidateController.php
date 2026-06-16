@@ -36,10 +36,11 @@ class CandidateController extends Controller
 
         $tenant_id = $request->user()->tenant_id;
 
-        // Check if candidate already exists
+        // Check if candidate already exists (using blind hash index)
+        $docHash = hash_hmac('sha256', $request->document_number, config('app.key') ?: 'base-salt-string');
         $candidate = Candidate::where('tenant_id', $tenant_id)
             ->where('document_type', $request->document_type)
-            ->where('document_number', $request->document_number)
+            ->where('document_number_hash', $docHash)
             ->first();
 
         // Handle File Upload
@@ -47,7 +48,7 @@ class CandidateController extends Controller
         if ($request->hasFile('cv_file')) {
             $file = $request->file('cv_file');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $cvPath = $file->storeAs("tenant_{$tenant_id}/cvs", $filename, 'public');
+            $cvPath = $file->storeAs("tenant_{$tenant_id}/cvs", $filename, 'private');
         }
 
         if (!$candidate) {
@@ -60,12 +61,12 @@ class CandidateController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'source' => $request->source,
-                'cv_path' => $cvPath ? '/storage/' . $cvPath : null,
+                'cv_path' => $cvPath,
             ]);
         } else {
             // Update CV if provided
             if ($cvPath) {
-                $candidate->update(['cv_path' => '/storage/' . $cvPath]);
+                $candidate->update(['cv_path' => $cvPath]);
             }
         }
 

@@ -45,6 +45,7 @@ class ClientController extends Controller
             'phone' => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'industry_sector' => 'required|string|max:100',
+            'website' => 'nullable|url|max:255',
         ]);
 
         $action->execute($validated);

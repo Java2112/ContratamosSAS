@@ -22,6 +22,7 @@ class Client extends Model
         'phone',
         'address',
         'industry_sector',
+        'website',
         'status', // active, inactive, pending
     ];
 

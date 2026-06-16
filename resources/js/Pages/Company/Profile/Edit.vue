@@ -19,6 +19,7 @@ const form = useForm({
     phone: props.client.phone || '',
     address: props.client.address || '',
     industry_sector: props.client.industry_sector || '',
+    website: props.client.website || '',
 });
 
 const submit = () => {
@@ -67,6 +68,11 @@ const submit = () => {
                             <InputLabel for="industry_sector" value="Sector de la Industria" />
                             <TextInput id="industry_sector" v-model="form.industry_sector" class="mt-1 block w-full" />
                             <InputError :message="form.errors.industry_sector" />
+                        </div>
+                        <div class="col-span-1 md:col-span-2">
+                            <InputLabel for="website" value="Página Web Corporativa (URL)" />
+                            <TextInput id="website" v-model="form.website" placeholder="https://miempresa.com" class="mt-1 block w-full" />
+                            <InputError :message="form.errors.website" />
                         </div>
                     </div>
 

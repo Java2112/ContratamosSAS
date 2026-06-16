@@ -25,16 +25,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Rutas del Dominio Comercial
-    Route::prefix('commercial')->middleware('role:admin,coordinador')->name('commercial.')->group(function () {
+    Route::prefix('commercial')->middleware(['role:admin,coordinador', 'area:comercial', 'audit:comercial'])->name('commercial.')->group(function () {
         Route::resource('clients', \App\Domains\Commercial\Controllers\ClientController::class);
         Route::resource('contracts', \App\Domains\Commercial\Controllers\ContractController::class);
         Route::get('contracts/{contract}/pdf', [\App\Domains\Commercial\Controllers\ContractController::class, 'downloadPdf'])->name('contracts.pdf');
     });
 
     // Rutas del Dominio Selección
-    Route::prefix('selection')->middleware('role:admin,coordinador,asistente,analista')->name('selection.')->group(function () {
+    Route::prefix('selection')->middleware(['role:admin,coordinador,asistente,analista', 'area:seleccion', 'audit:seleccion'])->name('selection.')->group(function () {
         Route::get('/dashboard', [\App\Domains\Selection\Controllers\DashboardController::class, 'index'])->name('dashboard');
         
+        Route::get('vacancies/{vacancy}/template', [\App\Domains\Selection\Controllers\VacancyController::class, 'getTemplate'])->name('vacancies.template');
         Route::resource('vacancies', \App\Domains\Selection\Controllers\VacancyController::class);
         Route::post('vacancies/{vacancy}/assign', [\App\Domains\Selection\Controllers\VacancyController::class, 'assignAnalyst'])->name('vacancies.assign');
         Route::post('vacancies/{vacancy}/urgent', [\App\Domains\Selection\Controllers\VacancyController::class, 'markUrgent'])->name('vacancies.urgent');
@@ -49,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Rutas del Dominio Contratación
-    Route::prefix('contracting')->middleware('role:admin,jefe-contratacion')->name('contracting.')->group(function () {
+    Route::prefix('contracting')->middleware(['role:admin,jefe-contratacion', 'area:contratacion', 'audit:contratacion'])->name('contracting.')->group(function () {
         Route::get('/dashboard', [\App\Domains\Contracting\Controllers\ContractingDashboardController::class, 'index'])->name('dashboard');
         
         Route::get('/process', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'index'])->name('process.index');
@@ -62,10 +63,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/process/{process}/send-to-payroll', [\App\Domains\Contracting\Controllers\ContractingProcessController::class, 'sendToPayroll'])->name('process.send-to-payroll');
     });
 
+    // Rutas del Dominio Descargos Disciplinarios
+    Route::prefix('disciplinary')->middleware(['role:admin,descargos', 'area:descargos', 'audit:descargos'])->name('disciplinary.')->group(function () {
+        Route::get('/dashboard', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'dashboard'])->name('dashboard');
+        Route::get('/create/{employee}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'store'])->name('store');
+        Route::get('/show/{record}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'show'])->name('show');
+        
+        // Cuestionario
+        Route::get('/form/{record}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'form'])->name('form');
+        Route::post('/form/{record}/save', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'saveQuestionsAndAnswers'])->name('form.save');
+        
+        // Acciones del Proceso
+        Route::post('/finalize/{record}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'finalize'])->name('finalize');
+        Route::get('/pdf/{record}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'generatePdf'])->name('pdf');
+        Route::post('/close/{record}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'close'])->name('close');
+        
+        // Historial individual
+        Route::get('/history/{employee}', [\App\Domains\Disciplinary\Controllers\DisciplinaryController::class, 'history'])->name('history');
+    });
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
+    // Secure private downloads (Internal HR)
+    Route::get('/secure-download/disciplinary/{file}', [\App\Http\Controllers\SecureDownloadController::class, 'downloadDisciplinaryFile'])
+        ->name('secure.download.disciplinary')
+        ->middleware('signed');
 });
 
 require __DIR__.'/auth.php';
@@ -90,6 +115,12 @@ Route::prefix('company')->name('company.')->group(function () {
     // Rutas protegidas (solo empresas autenticadas)
     Route::middleware('company.auth')->group(function () {
         Route::get('/dashboard', [\App\Domains\Company\Controllers\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Force change password
+        Route::get('/force-change-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'forceChangeShow'])->name('password.force-change');
+        Route::post('/force-change-password', [\App\Domains\Company\Controllers\FirstLoginController::class, 'forceChangeStore'])->name('password.force-change.store');
+
+        Route::get('vacancies/{vacancy}/template', [\App\Domains\Company\Controllers\VacancyController::class, 'getTemplate'])->name('vacancies.template');
         Route::resource('vacancies', \App\Domains\Company\Controllers\VacancyController::class);
 
         // Candidate Reviews
@@ -107,3 +138,6 @@ Route::prefix('company')->name('company.')->group(function () {
 // Public Magic Link Routes (No Auth Required)
 Route::get('/client/review/{token}', [\App\Domains\Selection\Controllers\MagicLinkController::class, 'show'])->name('magic-link.show');
 Route::post('/client/review/{token}/application/{application}', [\App\Domains\Selection\Controllers\MagicLinkController::class, 'updateApplicationStatus'])->name('magic-link.application.update');
+
+// Secure CV download (Supports authenticated users and guest magic links)
+Route::get('/secure-download/cv/{candidate}', [\App\Http\Controllers\SecureDownloadController::class, 'downloadCandidateCv'])->name('secure.download.cv');

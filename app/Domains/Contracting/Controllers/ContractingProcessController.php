@@ -85,12 +85,19 @@ class ContractingProcessController extends Controller
             'rejection_reason' => 'nullable|string'
         ]);
 
-        $document->update([
+        $documentData = [
             'status' => $request->status,
             'rejection_reason' => $request->rejection_reason,
             'validated_at' => now(),
             'validated_by' => $request->user()->id,
-        ]);
+        ];
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store("contracting/{$document->contracting_process_id}/documents", 'public');
+            $documentData['file_path'] = $path;
+        }
+
+        $document->update($documentData);
 
         // Check if all required documents are approved
         $process = $document->process;
@@ -181,15 +188,23 @@ class ContractingProcessController extends Controller
             'entity_name' => 'required|string',
             'affiliation_number' => 'nullable|string',
             'affiliation_date' => 'nullable|date',
-            'status' => 'required|string'
+            'status' => 'required|string',
+            'file' => 'nullable|file|max:10240', // 10MB limit
         ]);
+
+        $affiliationData = $request->only(['entity_name', 'affiliation_number', 'affiliation_date', 'status']);
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store("contracting/{$process->id}/affiliations", 'public');
+            $affiliationData['file_path'] = $path;
+        }
 
         EmployeeAffiliation::updateOrCreate(
             [
                 'contracting_process_id' => $process->id,
                 'type' => $request->type
             ],
-            $request->only(['entity_name', 'affiliation_number', 'affiliation_date', 'status'])
+            $affiliationData
         );
 
         // Check if all mandatory affiliations are active (EPS, ARL, Pensión, Cesantías)

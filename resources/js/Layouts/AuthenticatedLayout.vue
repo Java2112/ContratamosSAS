@@ -49,6 +49,12 @@ const user = computed(() => page.props.auth.user);
                                     </NavLink>
                                 </template>
 
+                                <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.role === 'descargos' || user.system_area === 'descargos'">
+                                    <NavLink :href="route('disciplinary.dashboard')" :active="route().current('disciplinary.*')">
+                                        Descargos Disciplinarios
+                                    </NavLink>
+                                </template>
+
                                 <template v-if="user.role === 'admin' || user.system_area === 'gerencia'">
                                     <NavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
                                         Empleados
@@ -182,6 +188,12 @@ const user = computed(() => page.props.auth.user);
                         <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.system_area === 'contratacion' || user.role === 'jefe-contratacion'">
                             <ResponsiveNavLink :href="route('contracting.dashboard')" :active="route().current('contracting.*')">
                                 Contratación
+                            </ResponsiveNavLink>
+                        </template>
+
+                        <template v-if="user.role === 'admin' || user.system_area === 'gerencia' || user.role === 'descargos' || user.system_area === 'descargos'">
+                            <ResponsiveNavLink :href="route('disciplinary.dashboard')" :active="route().current('disciplinary.*')">
+                                Descargos Disciplinarios
                             </ResponsiveNavLink>
                         </template>
 

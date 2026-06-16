@@ -77,7 +77,7 @@ const submitReview = () => {
                         </div>
 
                         <div class="flex flex-col sm:flex-row gap-3 min-w-max">
-                            <a v-if="app.candidate.cv_path" :href="app.candidate.cv_path" target="_blank" class="px-4 py-2 border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-bold rounded-lg text-sm text-center transition flex-1">
+                            <a v-if="app.candidate.cv_path" :href="`/secure-download/cv/${app.candidate.id}?token=${token}`" target="_blank" class="px-4 py-2 border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-bold rounded-lg text-sm text-center transition flex-1">
                                 Ver Hoja de Vida
                             </a>
                             <a v-if="app.report_url" :href="app.report_url" target="_blank" class="px-4 py-2 bg-brand-primary/10 text-brand-dark hover:bg-brand-primary hover:text-white font-bold rounded-lg text-sm text-center transition flex-1 border border-brand-primary">

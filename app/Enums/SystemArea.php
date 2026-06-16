@@ -11,6 +11,7 @@ enum SystemArea: string
     case NOMINA = 'nomina';
     case FINANCIERA = 'financiera';
     case EMPRESAS = 'empresas';
+    case DESCARGOS = 'descargos';
 
     public function label(): string
     {
@@ -22,6 +23,7 @@ enum SystemArea: string
             self::NOMINA => 'Nómina',
             self::FINANCIERA => 'Financiera',
             self::EMPRESAS => 'Empresas',
+            self::DESCARGOS => 'Descargos',
         };
     }
 

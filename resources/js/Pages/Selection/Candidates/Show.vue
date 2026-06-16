@@ -81,7 +81,7 @@ const getStatusColor = (status) => {
                             <div class="mt-8">
                                 <a 
                                     v-if="candidate.cv_path" 
-                                    :href="candidate.cv_path" 
+                                    :href="`/secure-download/cv/${candidate.id}`" 
                                     target="_blank"
                                     class="w-full flex items-center justify-center px-4 py-3 bg-brand-primary text-white font-bold rounded-xl hover:bg-brand-dark transition-all shadow-lg shadow-brand-primary/20"
                                 >

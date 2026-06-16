@@ -18,7 +18,8 @@ const activeTab = ref('documents');
 
 const docForm = useForm({
     status: '',
-    rejection_reason: ''
+    rejection_reason: '',
+    file: null
 });
 
 const selectedDoc = ref(null);
@@ -33,8 +34,10 @@ const openDocModal = (doc) => {
 
 const submitDocValidation = () => {
     docForm.post(route('contracting.document.validate', selectedDoc.value.id), {
+        forceFormData: true,
         onSuccess: () => {
             showDocModal.value = false;
+            docForm.reset();
         }
     });
 };
@@ -79,19 +82,25 @@ const affiliationForm = useForm({
     entity_name: '',
     affiliation_number: '',
     affiliation_date: '',
-    status: 'PENDIENTE'
+    status: 'PENDIENTE',
+    file: null
 });
 
 const saveAffiliation = (type) => {
     affiliationForm.type = type;
     const existing = props.process.affiliations.find(a => a.type === type);
     if (existing) {
-        affiliationForm.entity_name = existing.entity_name;
-        affiliationForm.affiliation_number = existing.affiliation_number;
-        affiliationForm.affiliation_date = existing.affiliation_date;
-        affiliationForm.status = existing.status;
+        affiliationForm.entity_name = existing.entity_name || '';
+        affiliationForm.affiliation_number = existing.affiliation_number || '';
+        affiliationForm.affiliation_date = existing.affiliation_date || '';
+        affiliationForm.status = existing.status || 'PENDIENTE';
     }
-    affiliationForm.post(route('contracting.process.affiliation', props.process.id));
+    affiliationForm.post(route('contracting.process.affiliation', props.process.id), {
+        forceFormData: true,
+        onSuccess: () => {
+            affiliationForm.file = null;
+        }
+    });
 };
 
 const sendToPayroll = () => {
@@ -245,6 +254,13 @@ const getStatusBadgeClass = (status) => {
                                     <InputLabel value="Observaciones" />
                                     <textarea v-model="medicalForm.observations" class="w-full mt-1 border-gray-300 rounded-md shadow-sm h-24"></textarea>
                                 </div>
+                                <div>
+                                    <InputLabel value="Cargar Resultado (PDF/Imagen)" />
+                                    <div class="mt-1 flex items-center space-x-4">
+                                        <input type="file" @input="medicalForm.file = $event.target.files[0]" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-brand-dark hover:file:bg-brand-primary/80" />
+                                        <a v-if="process.medical_exam?.file_path" :href="`/storage/${process.medical_exam.file_path}`" target="_blank" class="text-xs font-bold text-emerald-600 hover:underline shrink-0">Ver Actual</a>
+                                    </div>
+                                </div>
                                 <div class="flex justify-center">
                                     <PrimaryButton :disabled="medicalForm.processing">Guardar Resultado</PrimaryButton>
                                 </div>
@@ -293,6 +309,19 @@ const getStatusBadgeClass = (status) => {
                                     <h5 class="font-bold text-sm text-gray-900 mb-4">{{ type }}</h5>
                                     <div class="space-y-4">
                                         <TextInput v-model="affiliationForm.entity_name" placeholder="Nombre entidad..." class="w-full text-sm" />
+                                        
+                                        <div class="flex flex-col space-y-1">
+                                            <InputLabel value="Soporte (Archivo)" class="text-[10px]" />
+                                            <div class="flex items-center space-x-2">
+                                                <input type="file" @input="affiliationForm.file = $event.target.files[0]" class="block w-full text-[10px] text-gray-500" />
+                                                <a v-if="process.affiliations.find(a => a.type === type)?.file_path" 
+                                                    :href="`/storage/${process.affiliations.find(a => a.type === type).file_path}`" 
+                                                    target="_blank" 
+                                                    class="text-[10px] font-bold text-emerald-600 hover:underline shrink-0"
+                                                >Ver</a>
+                                            </div>
+                                        </div>
+
                                         <div class="flex gap-2">
                                             <select v-model="affiliationForm.status" class="flex-1 text-sm border-gray-300 rounded-md">
                                                 <option value="PENDIENTE">PENDIENTE</option>
@@ -327,6 +356,10 @@ const getStatusBadgeClass = (status) => {
                             <option value="APROBADO">APROBAR</option>
                             <option value="RECHAZADO">RECHAZAR</option>
                         </select>
+                    </div>
+                    <div>
+                        <InputLabel value="Actualizar/Cargar Archivo" />
+                        <input type="file" @input="docForm.file = $event.target.files[0]" class="mt-1 block w-full text-sm text-gray-500" />
                     </div>
                     <div v-if="docForm.status === 'RECHAZADO'">
                         <InputLabel value="Motivo Rechazo" />

@@ -110,7 +110,7 @@ const submitReject = () => {
                             <div class="mt-8 pt-6 border-t border-gray-50 dark:border-gray-700">
                                 <a 
                                     v-if="application.candidate.cv_path" 
-                                    :href="application.candidate.cv_path" 
+                                    :href="`/secure-download/cv/${application.candidate.id}`" 
                                     target="_blank"
                                     class="w-full flex items-center justify-center px-4 py-3 bg-brand-primary/10 text-brand-dark font-bold rounded-xl hover:bg-brand-primary hover:text-white transition-all border border-brand-primary"
                                 >

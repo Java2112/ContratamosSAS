@@ -127,6 +127,9 @@ const copyMagicLink = () => {
                 <span v-if="vacancy.priority === 'urgent'" class="px-3 py-1 bg-red-100 text-red-800 font-bold rounded-full text-sm border border-red-200">
                     URGENTE
                 </span>
+                <span v-if="vacancy.anonymous_company" class="px-3 py-1 bg-amber-100 text-amber-800 font-bold rounded-full text-sm border border-amber-200 animate-pulse">
+                    VACANTE ANÓNIMA
+                </span>
             </div>
         </template>
 
@@ -139,6 +142,7 @@ const copyMagicLink = () => {
                         <div>
                             <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Cliente / Empresa</h4>
                             <p class="mt-1 text-lg font-semibold text-brand-dark">{{ vacancy.client?.business_name || 'N/A' }}</p>
+                            <span v-if="vacancy.anonymous_company" class="text-[10px] text-amber-600 font-bold uppercase">Publicar como empresa confidencial</span>
                         </div>
                         <div>
                             <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Cupos Requeridos</h4>
@@ -196,10 +200,7 @@ const copyMagicLink = () => {
                             <div>
                                 <h4 class="text-sm font-bold text-gray-400 uppercase">Oferta Salarial</h4>
                                 <ul class="mt-2 space-y-2 text-sm text-gray-700">
-                                    <li><strong>Tipo:</strong> <span class="capitalize">{{ vacancy.salary_type || 'N/A' }}</span></li>
-                                    <li v-if="vacancy.salary_type === 'rango'">
-                                        <strong>Rango:</strong> ${{ vacancy.min_salary }} - ${{ vacancy.max_salary }}
-                                    </li>
+                                    <li><strong>Rango:</strong> ${{ vacancy.salary_min }} - ${{ vacancy.salary_max }}</li>
                                     <li><strong>Frecuencia Pago:</strong> <span class="capitalize">{{ vacancy.payroll_frequency || 'N/A' }}</span></li>
                                     <li><strong>Comisiones/Bonos:</strong> {{ vacancy.has_bonuses ? 'Sí ($' + vacancy.bonus_average + ' prom)' : 'No' }}</li>
                                 </ul>
@@ -208,7 +209,7 @@ const copyMagicLink = () => {
                                 <h4 class="text-sm font-bold text-gray-400 uppercase mt-6">Requisitos del Candidato</h4>
                                 <ul class="mt-2 space-y-2 text-sm text-gray-700">
                                     <li><strong>Nivel Educativo:</strong> <span class="capitalize">{{ vacancy.min_education_level || 'N/A' }}</span></li>
-                                    <li><strong>Experiencia Mínima:</strong> {{ vacancy.min_experience_years !== null ? vacancy.min_experience_years + ' años' : 'N/A' }}</li>
+                                    <li><strong>Experiencia Mínima:</strong> {{ vacancy.experience_value ? vacancy.experience_value + ' ' + vacancy.experience_unit : 'N/A' }}</li>
                                     <li v-if="vacancy.languages?.length > 0"><strong>Idiomas:</strong> {{ vacancy.languages.join(', ') }}</li>
                                     <li v-if="vacancy.hard_skills?.length > 0"><strong>Conocimientos:</strong> {{ vacancy.hard_skills.join(', ') }}</li>
                                     <li v-if="vacancy.soft_skills?.length > 0"><strong>Habilidades Blandas:</strong> {{ vacancy.soft_skills.join(', ') }}</li>
@@ -278,7 +279,7 @@ const copyMagicLink = () => {
                                         <button v-if="userRole === 'coordinador' || userRole === 'asistente' || userRole === 'analista'" @click="openStatusModal(app)" class="text-brand-primary hover:text-brand-dark font-bold underline text-xs uppercase tracking-wide ml-2">
                                             Avanzar Etapa
                                         </button>
-                                        <a v-if="app.candidate?.cv_path" :href="app.candidate.cv_path" target="_blank" class="text-blue-500 hover:text-blue-700 ml-2 font-bold underline text-xs uppercase tracking-wide">
+                                        <a v-if="app.candidate?.cv_path" :href="`/secure-download/cv/${app.candidate.id}`" target="_blank" class="text-blue-500 hover:text-blue-700 ml-2 font-bold underline text-xs uppercase tracking-wide">
                                             Ver CV
                                         </a>
 

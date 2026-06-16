@@ -81,6 +81,11 @@ const markUrgent = (vacancy) => {
                                         <Link :href="route('selection.vacancies.show', vacancy.id)" class="text-brand-dark hover:text-brand-primary font-bold">
                                             #{{ vacancy.id }} - {{ vacancy.title }}
                                         </Link>
+                                        <div v-if="vacancy.anonymous_company" class="mt-1">
+                                            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full border border-amber-200">
+                                                ANÓNIMA
+                                            </span>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4">{{ vacancy.client?.business_name }}</td>
                                     <td class="px-6 py-4 text-center font-bold text-gray-600">{{ vacancy.applications_count }} / {{ vacancy.positions_required }}</td>

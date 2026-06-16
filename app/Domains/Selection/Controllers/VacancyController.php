@@ -8,6 +8,7 @@ use App\Domains\Commercial\Models\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Domains\Selection\Requests\StoreVacancyRequest;
 
 class VacancyController extends Controller
 {
@@ -77,26 +78,24 @@ class VacancyController extends Controller
         return Inertia::render('Selection/Vacancies/Create', [
             'clients' => Client::select('id', 'business_name')->get(),
             'priorities' => \App\Enums\Selection\VacancyPriority::toArray(),
+            'previousVacancies' => Vacancy::latest()->limit(50)->get(['id', 'title', 'client_id']), // Selection can see more
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreVacancyRequest $request)
     {
-        $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'positions_required' => 'required|integer|min:1',
-            'priority' => 'required|string',
-            'expires_at' => 'nullable|date',
-        ]);
-
+        $validated = $request->validated();
         $validated['tenant_id'] = $request->user()->tenant_id;
         $validated['status'] = \App\Enums\Selection\VacancyStatus::NEW->value;
 
         Vacancy::create($validated);
 
         return redirect()->route('selection.vacancies.index')->with('success', 'Vacante creada exitosamente.');
+    }
+
+    public function getTemplate(Vacancy $vacancy)
+    {
+        return response()->json($vacancy);
     }
     
     public function markUrgent(Vacancy $vacancy)

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Domains\Commercial\Models\Client;
 use App\Enums\Selection\VacancyStatus;
 use App\Enums\Selection\VacancyPriority;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,11 +15,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Vacancy extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToTenant;
 
     protected $fillable = [
         'tenant_id',
         'client_id',
+        'anonymous_company',
         'title',
         'description',
         'positions_required',
@@ -34,9 +36,8 @@ class Vacancy extends Model
         'payroll_frequency',
         'workday_type',
         'schedule',
-        'salary_type',
-        'min_salary',
-        'max_salary',
+        'salary_min',
+        'salary_max',
         'has_bonuses',
         'bonus_average',
         'work_modality',
@@ -44,7 +45,8 @@ class Vacancy extends Model
         'city',
         'department_name',
         'min_education_level',
-        'min_experience_years',
+        'experience_value',
+        'experience_unit',
         'languages',
         'soft_skills',
         'hard_skills',
@@ -56,11 +58,12 @@ class Vacancy extends Model
     protected $casts = [
         'status' => VacancyStatus::class,
         'priority' => VacancyPriority::class,
+        'anonymous_company' => 'boolean',
         'expires_at' => 'datetime',
         'closed_at' => 'datetime',
         'has_bonuses' => 'boolean',
-        'min_salary' => 'decimal:2',
-        'max_salary' => 'decimal:2',
+        'salary_min' => 'decimal:2',
+        'salary_max' => 'decimal:2',
         'bonus_average' => 'decimal:2',
         'languages' => 'array',
         'soft_skills' => 'array',

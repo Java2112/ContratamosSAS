@@ -14,11 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            \App\Http\Middleware\SecureHeaders::class,
         ]);
 
         $middleware->alias([
             'company.auth' => \App\Http\Middleware\EnsureCompanyAuth::class,
             'role' => \App\Http\Middleware\CheckRole::class,
+            'area' => \App\Http\Middleware\EnsureUserInArea::class,
+            'audit' => \App\Http\Middleware\AuditSensitiveAccess::class,
         ]);
 
         $middleware->redirectGuestsTo(fn ($request) => $request->is('company/*') || $request->is('company') 

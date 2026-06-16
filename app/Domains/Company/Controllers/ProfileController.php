@@ -38,6 +38,7 @@ class ProfileController extends Controller
             'phone' => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'industry_sector' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
         ]);
 
         // Log the change for admin audit

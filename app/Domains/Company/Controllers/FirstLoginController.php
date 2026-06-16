@@ -79,4 +79,30 @@ class FirstLoginController extends Controller
 
         return redirect()->route('company.dashboard')->with('status', 'Contraseña configurada exitosamente e inicio de sesión correcto.');
     }
+
+    /**
+     * Show the force password change view for authenticated users.
+     */
+    public function forceChangeShow()
+    {
+        return Inertia::render('Company/Auth/ForceChangePassword');
+    }
+
+    /**
+     * Handle the forced password change submission.
+     */
+    public function forceChangeStore(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $user = $request->user();
+        $user->forceFill([
+            'password' => Hash::make($request->password),
+            'must_change_password' => false,
+        ])->save();
+
+        return redirect()->route('company.dashboard')->with('status', 'Contraseña actualizada exitosamente.');
+    }
 }

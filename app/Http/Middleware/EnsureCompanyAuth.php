@@ -32,6 +32,14 @@ class EnsureCompanyAuth
                 ->with('error', 'Su cuenta no tiene permisos para acceder al Portal de Empresas.');
         }
 
+        // Si el usuario debe cambiar su contraseña y no está en la ruta de cambio de contraseña obligatoria, redirigir
+        if (Auth::user()->must_change_password && 
+            !$request->routeIs('company.password.force-change') && 
+            !$request->routeIs('company.password.force-change.store') &&
+            !$request->routeIs('company.logout')) {
+            return redirect()->route('company.password.force-change');
+        }
+
         return $next($request);
     }
 }
