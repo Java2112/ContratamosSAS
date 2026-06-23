@@ -1,0 +1,78 @@
+services:
+  # Aplicación Laravel (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    image: contratamos-app
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    volumes:
+      - storage-data:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - contratamos
+
+  # Servidor web Nginx (sirve public/ y proxya PHP a app:9000)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    image: contratamos-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+    networks:
+      - contratamos
+
+  # Worker de colas (driver database)
+  queue:
+    image: contratamos-app
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    environment:
+      # El worker no debe migrar ni enlazar storage (lo hace el contenedor 'app')
+      SKIP_INIT: "true"
+    command: php artisan queue:work --tries=3 --timeout=90 --sleep=3
+    volumes:
+      - storage-data:/var/www/html/storage
+    depends_on:
+      - app
+      - db
+    networks:
+      - contratamos
+
+  # Base de datos MariaDB
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-contratamos}
+      MARIADB_USER: ${DB_USERNAME:-contratamos}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-secret}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - contratamos
+
+volumes:
+  db-data:
+  storage-data:
+
+networks:
+  contratamos:
+    driver: bridge
