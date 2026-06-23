@@ -11,6 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Detrás de un reverse proxy (nginx-proxy-manager/Traefik) que termina TLS.
+        // Confiar en el proxy permite que Laravel detecte HTTPS vía X-Forwarded-Proto
+        // y genere las URLs de assets con el esquema correcto (evita pantalla en blanco
+        // por mixed-content). La app solo es accesible a través del proxy interno.
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
