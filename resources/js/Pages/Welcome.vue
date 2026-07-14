@@ -17,12 +17,8 @@ defineProps({
     <div class="bg-gray-50 text-gray-800 selection:bg-brand-primary selection:text-white dark:bg-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
         <header class="bg-brand-dark text-white relative shadow-lg">
             <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-                <div class="flex items-center space-x-3">
-                    <!-- Logo Vector Placeholder -->
-                    <svg viewBox="0 0 40 40" class="h-10 w-10 text-brand-primary" fill="currentColor">
-                        <path d="M20 0C8.954 0 0 8.954 0 20s8.954 20 20 20 20-8.954 20-20S31.046 0 20 0zm0 35c-8.284 0-15-6.716-15-15S11.716 5 20 5s15 6.716 15 15-6.716 15-15 15zm4.828-21.828L18 19.344l-2.828-2.829-2.829 2.829L18 25l9.657-9.657-2.829-2.171z" />
-                    </svg>
-                    <span class="text-2xl font-bold tracking-tight">CONTRATAMOS</span>
+                <div class="flex items-center">
+                    <img src="/images/logos/logo-header-white.png" alt="Contratamos" class="h-14 w-auto" />
                 </div>
                 
                 <nav v-if="canLogin" class="flex items-center space-x-6">
@@ -87,17 +83,8 @@ defineProps({
                 <div class="absolute w-96 h-96 bg-brand-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 mt-32 ml-32"></div>
                 <div class="absolute w-96 h-96 bg-gray-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000 -ml-32 mt-16"></div>
                 
-                <div class="relative z-10 grid grid-cols-2 gap-6 p-12">
-                     <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/20 transform -translate-y-8">
-                         <div class="h-12 w-12 rounded-full bg-brand-primary mb-4 flex items-center justify-center text-brand-dark font-bold text-xl">1</div>
-                         <h3 class="text-white font-bold text-lg mb-2">Selección Ágil</h3>
-                         <p class="text-gray-300 text-sm">Encuentra los mejores candidatos en tiempo récord.</p>
-                     </div>
-                     <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/20 transform translate-y-8">
-                         <div class="h-12 w-12 rounded-full bg-brand-secondary mb-4 flex items-center justify-center text-white font-bold text-xl">2</div>
-                         <h3 class="text-white font-bold text-lg mb-2">Gestión de Nómina</h3>
-                         <p class="text-gray-300 text-sm">Automatización exacta y sin retrasos.</p>
-                     </div>
+                <div class="relative z-10 flex items-center justify-center p-12">
+                     <img src="/images/logos/logo-full-bg.jpg" alt="Contratamos" class="w-full max-w-md rounded-3xl shadow-2xl border border-white/10 opacity-90" />
                 </div>
             </div>
         </main>

@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -23,11 +22,9 @@ const user = computed(() => page.props.auth.user);
                     <div class="flex h-20 justify-between items-center">
                         <div class="flex items-center">
                             <!-- Logo Wrapper -->
-                            <div class="flex shrink-0 items-center justify-center bg-white p-2 rounded-2xl shadow-inner shadow-black/5 mr-6 transition-transform hover:scale-105">
+                            <div class="flex shrink-0 items-center justify-center p-2 mr-6 transition-transform hover:scale-105">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-10 w-auto text-brand-primary"
-                                    />
+                                    <img src="/images/logos/logo-icon-white.png" alt="Contratamos" class="block h-10 w-auto" />
                                 </Link>
                             </div>
 

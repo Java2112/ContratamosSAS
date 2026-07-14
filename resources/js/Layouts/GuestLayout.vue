@@ -1,5 +1,4 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -9,8 +8,8 @@ import { Link } from '@inertiajs/vue3';
     >
         <div class="mb-8">
             <Link href="/" class="flex flex-col items-center gap-3">
-                <div class="p-4 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
-                    <ApplicationLogo class="h-12 w-auto text-brand-primary" />
+                <div class="p-4 bg-brand-dark rounded-3xl shadow-xl border border-brand-dark/50">
+                    <img src="/images/logos/logo-icon-white.png" alt="Contratamos" class="h-12 w-auto" />
                 </div>
                 <span class="text-3xl font-extrabold text-brand-dark dark:text-white tracking-tight">CONTRATAMOS</span>
             </Link>

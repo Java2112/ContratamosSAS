@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -29,9 +28,9 @@ const logout = () => {
                 <div class="flex justify-between h-20 items-center">
                     <div class="flex items-center">
                         <!-- Logo -->
-                        <div class="shrink-0 flex items-center bg-brand-dark dark:bg-white p-2 rounded-2xl shadow-xl shadow-brand-dark/10 mr-6">
+                        <div class="shrink-0 flex items-center p-2 mr-6">
                             <Link :href="route('company.dashboard')">
-                                <ApplicationLogo class="block h-9 w-auto text-brand-primary" />
+                                <img src="/images/logos/logo-icon-white.png" alt="Contratamos" class="block h-9 w-auto" />
                             </Link>
                         </div>
 

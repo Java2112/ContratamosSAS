@@ -13,13 +13,14 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 brand: {
                     dark: '#06302B',    // Verde Profundo / Institucional
                     primary: '#00DF81', // Verde Brillante / Principal
                     secondary: '#00BEB5', // Verde Acuarela / Acentos
+                    light: '#F9F9F9',   // Transparencia / Claridad
                 }
             }
         },

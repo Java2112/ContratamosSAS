@@ -30,11 +30,8 @@ const submit = () => {
         <!-- Logo + título portal -->
         <div class="mb-8 flex flex-col items-center gap-3">
             <!-- Ícono empresa -->
-            <div class="w-16 h-16 rounded-2xl bg-brand-primary/20 border border-brand-primary/30 flex items-center justify-center shadow-lg shadow-brand-primary/20">
-                <svg class="w-8 h-8 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                </svg>
+            <div class="w-20 h-20 rounded-2xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shadow-lg shadow-brand-primary/20 p-3">
+                <img src="/images/logos/logo-icon-color.png" alt="Contratamos" class="w-full h-full object-contain" />
             </div>
             <div class="text-center">
                 <p class="text-brand-primary text-xs font-semibold uppercase tracking-widest mb-1">Portal Empresas</p>
